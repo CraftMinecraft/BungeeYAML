@@ -1,0 +1,4 @@
+BungeeYAML
+==========
+
+A simple port of the Bukkit's Configuration API to BungeeCord, plus an awesome AwesomeConfig class for Lazy configuration.
