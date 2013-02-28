@@ -236,7 +236,7 @@ public abstract class AwesomeConfig {
     }
     
     private File getFile(Plugin plugin) {
-        return new File("plugins" + File.pathSeparator + plugin.getDescription().getName(), "config.yml");
+        return new File("plugins" + File.separator + plugin.getDescription().getName(), "config.yml");
     }
     
 }

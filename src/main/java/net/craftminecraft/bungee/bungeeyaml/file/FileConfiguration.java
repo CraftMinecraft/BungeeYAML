@@ -1,7 +1,5 @@
 package net.craftminecraft.bungee.bungeeyaml.file;
 
-import com.google.common.io.Files;
-
 import com.google.common.base.Preconditions;
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,8 +48,22 @@ public abstract class FileConfiguration extends MemoryConfiguration {
     public void save(File file) throws IOException {
         Preconditions.checkNotNull(file, "File cannot be null");
 
-        Files.createParentDirs(file);
-
+        File parent = file.getCanonicalFile().getParentFile();
+        if (parent == null) {
+          /*
+           * The given directory is a filesystem root. All zero of its ancestors
+           * exist. This doesn't mean that the root itself exists -- consider x:\ on
+           * a Windows machine without such a drive -- or even that the caller can
+           * create it, but this method makes no such guarantees even for non-root
+           * files.
+           */
+          return;
+        }
+        parent.mkdirs();
+        if (!parent.isDirectory()) {
+          throw new IOException("Unable to create parent directories of " + file);
+        }
+        
         String data = saveToString();
 
         FileWriter writer = new FileWriter(file);

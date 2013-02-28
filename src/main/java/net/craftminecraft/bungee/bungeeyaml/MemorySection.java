@@ -152,7 +152,7 @@ public class MemorySection implements ConfigurationSection {
     }
 
     public void set(String path, Object value) {
-        Preconditions.checkArgument(path.isEmpty(), "Cannot set to an empty path");
+		Preconditions.checkArgument(!path.isEmpty(), "Cannot set to an empty path");
 
         Configuration root = getRoot();
         if (root == null) {
@@ -223,7 +223,7 @@ public class MemorySection implements ConfigurationSection {
     }
 
     public ConfigurationSection createSection(String path) {
-        Preconditions.checkArgument(path.isEmpty(), "Cannot create section at empty path");
+        Preconditions.checkArgument(!path.isEmpty(), "Cannot create section at empty path");
         Configuration root = getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot create section without a root");
