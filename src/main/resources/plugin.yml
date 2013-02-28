@@ -1,0 +1,4 @@
+name: BungeeYAML
+main: net.craftminecraft.bungee.bungeeyaml.BungeeYAML
+version: ${pom.version}
+author: roblabla
