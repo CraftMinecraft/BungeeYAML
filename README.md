@@ -46,7 +46,7 @@ And now a config :
     public class BasicExampleConfig extends Config {
  
         public BasicExampleConfig(Plugin plugin) {
-            CONFIG_FILE = new File(plugin.getDataFolder(), "config.yml");
+            CONFIG_FILE = new File("plugins" + File.separator + plugin.getDescription().getName(), "config.yml");
             CONFIG_HEADER = "Basic Example Configuration File";
         }
  
@@ -54,7 +54,8 @@ And now a config :
         public boolean example_boolean = true;
     }
 
-This creates the following config : 
+This creates the following config :
+
     example:
         string: 'Example'
         boolean: true
