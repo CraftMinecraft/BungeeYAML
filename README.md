@@ -42,6 +42,7 @@ Now it's finally time to use your config. This is harder to explain, so first I'
     }
 
 And now a config : 
+
     public class BasicExampleConfig extends Config {
  
         public BasicExampleConfig(Plugin plugin) {
