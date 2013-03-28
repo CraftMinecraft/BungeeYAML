@@ -1,4 +1,4 @@
-package net.craftminecraft.bungee.bungeeyaml.file;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi.file;
 
 import com.google.common.base.Preconditions;
 

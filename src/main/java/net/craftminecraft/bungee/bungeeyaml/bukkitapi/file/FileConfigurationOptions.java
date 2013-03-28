@@ -1,6 +1,6 @@
-package net.craftminecraft.bungee.bungeeyaml.file;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi.file;
 
-import net.craftminecraft.bungee.bungeeyaml.*;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.*;
 
 /**
  * Various settings for controlling the input and output of a {@link FileConfiguration}

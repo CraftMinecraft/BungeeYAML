@@ -1,12 +1,12 @@
-package net.craftminecraft.bungee.bungeeyaml.file;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi.file;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-import net.craftminecraft.bungee.bungeeyaml.ConfigurationSection;
-import net.craftminecraft.bungee.bungeeyaml.serialization.ConfigurationSerializable;
-import net.craftminecraft.bungee.bungeeyaml.serialization.ConfigurationSerialization;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.ConfigurationSection;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.serialization.ConfigurationSerializable;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.serialization.ConfigurationSerialization;
 
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.representer.Representer;

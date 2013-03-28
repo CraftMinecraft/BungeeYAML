@@ -1,4 +1,4 @@
-package net.craftminecraft.bungee.bungeeyaml.file;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,9 +9,9 @@ import java.util.logging.Level;
 
 import com.google.common.base.Preconditions;
 
-import net.craftminecraft.bungee.bungeeyaml.Configuration;
-import net.craftminecraft.bungee.bungeeyaml.ConfigurationSection;
-import net.craftminecraft.bungee.bungeeyaml.InvalidConfigurationException;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.Configuration;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.ConfigurationSection;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.InvalidConfigurationException;
 import net.md_5.bungee.api.ProxyServer;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

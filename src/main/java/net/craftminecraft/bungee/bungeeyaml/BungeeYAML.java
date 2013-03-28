@@ -1,5 +1,6 @@
 package net.craftminecraft.bungee.bungeeyaml;
 
+
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class BungeeYAML extends Plugin {

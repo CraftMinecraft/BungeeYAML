@@ -1,4 +1,4 @@
-package net.craftminecraft.bungee.bungeeyaml;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi;
 
 /**
  * Various settings for controlling the input and output of a {@link Configuration}

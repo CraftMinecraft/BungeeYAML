@@ -1,4 +1,4 @@
-package net.craftminecraft.bungee.bungeeyaml;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi;
 
 import java.util.Map;
 import java.util.Set;

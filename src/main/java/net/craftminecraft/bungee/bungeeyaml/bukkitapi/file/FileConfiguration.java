@@ -1,4 +1,4 @@
-package net.craftminecraft.bungee.bungeeyaml.file;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi.file;
 
 import com.google.common.base.Preconditions;
 import java.io.BufferedReader;
@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import net.craftminecraft.bungee.bungeeyaml.Configuration;
-import net.craftminecraft.bungee.bungeeyaml.InvalidConfigurationException;
-import net.craftminecraft.bungee.bungeeyaml.MemoryConfiguration;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.Configuration;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.InvalidConfigurationException;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.MemoryConfiguration;
 
 /**
  * This is a base class for all File based implementations of {@link Configuration}

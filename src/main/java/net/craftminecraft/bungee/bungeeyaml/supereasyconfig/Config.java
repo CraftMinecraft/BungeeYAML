@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import net.craftminecraft.bungee.bungeeyaml.InvalidConfigurationException;
-import net.craftminecraft.bungee.bungeeyaml.file.YamlConfiguration;
+
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.InvalidConfigurationException;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.file.YamlConfiguration;
 
 /*
  * SuperEasyConfig - Config

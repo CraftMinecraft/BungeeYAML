@@ -1,4 +1,4 @@
-package net.craftminecraft.bungee.bungeeyaml.serialization;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi.serialization;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package net.craftminecraft.bungee.bungeeyaml.serialization;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi.serialization;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.craftminecraft.bungee.bungeeyaml.Configuration;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.Configuration;
 
 import com.google.common.base.Preconditions;
 

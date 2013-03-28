@@ -1,6 +1,6 @@
-package net.craftminecraft.bungee.bungeeyaml;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi;
 
-import static net.craftminecraft.bungee.bungeeyaml.NumberConversions.*;
+import static net.craftminecraft.bungee.bungeeyaml.bukkitapi.NumberConversions.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

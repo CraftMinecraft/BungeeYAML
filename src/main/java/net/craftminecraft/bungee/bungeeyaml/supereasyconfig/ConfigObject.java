@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.md_5.bungee.api.ProxyServer;
-import net.craftminecraft.bungee.bungeeyaml.ConfigurationSection;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.ConfigurationSection;
 
 /*
  * SuperEasyConfig - ConfigObject

@@ -1,4 +1,4 @@
-package net.craftminecraft.bungee.bungeeyaml;
+package net.craftminecraft.bungee.bungeeyaml.bukkitapi;
 
 /**
  * Utils for casting number types to other number types
