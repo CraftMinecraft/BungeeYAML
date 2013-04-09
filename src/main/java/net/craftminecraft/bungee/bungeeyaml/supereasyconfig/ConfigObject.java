@@ -9,22 +9,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.md_5.bungee.api.ProxyServer;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Table;
+
 import net.craftminecraft.bungee.bungeeyaml.bukkitapi.ConfigurationSection;
+import net.craftminecraft.bungee.bungeeyaml.bukkitapi.InvalidConfigurationException;
 
 /*
- * SuperEasyConfig - ConfigObject
+ * Bungee's SuperEasyConfig - ConfigObject
  * 
- * Based off of codename_Bs EasyConfig v2.1
+ * Based off of MrFigg's SuperEasyConfig v1.2
+ * which was inspired by codename_Bs
  * which was inspired by md_5
+ * which was inspired by... oh no, that's it.
  * 
- * An even awesomer super-duper-lazy Config lib!
+ * Super Lazy Configuration for BungeeCord.
+ * Includes support for Guava Library's collection types.
  * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * 
  * @author MrFigg
+ * @author roblabla
+ * 
  * @version 1.2
  */
 
@@ -37,6 +47,9 @@ public abstract class ConfigObject {
 	protected void onLoad(ConfigurationSection cs) throws Exception {
 		for(Field field : getClass().getDeclaredFields()) {
 			String path = field.getName().replaceAll("_", ".");
+			if (field.getAnnotation(Path.class) != null) {
+				path = field.getAnnotation(Path.class).value();
+			}
 			if(doSkip(field)) {
 				// Do nothing
 			} else if(cs.isSet(path)) {
@@ -71,6 +84,10 @@ public abstract class ConfigObject {
 		Class clazz = getClassAtDepth(field.getGenericType(), depth);
 		if(ConfigObject.class.isAssignableFrom(clazz)&&isConfigurationSection(cs.get(path))) {
 			return getConfigObject(clazz, cs.getConfigurationSection(path));
+		} else if (Multimap.class.isAssignableFrom(clazz)&&isConfigurationSection(cs.get(path))) {
+			return getMultimap(field, cs.getConfigurationSection(path), path, depth);
+		} else if (Table.class.isAssignableFrom(clazz)&&isConfigurationSection(cs.get(path))) {
+			return getTable(field, cs.getConfigurationSection(path), path, depth);
 		} else if(Map.class.isAssignableFrom(clazz)&&isConfigurationSection(cs.get(path))) {
 			return getMap(field, cs.getConfigurationSection(path), path, depth);
 		} else if(clazz.isEnum()&&isString(cs.get(path))) {
@@ -92,6 +109,10 @@ public abstract class ConfigObject {
 		Class clazz = getClassAtDepth(field.getGenericType(), depth);
 		if(ConfigObject.class.isAssignableFrom(clazz)&&isConfigObject(obj)) {
 			return getConfigObject((ConfigObject) obj, path, cs);
+		} else if(Multimap.class.isAssignableFrom(clazz)&&isMultimap(obj)) {
+			return getMultimap((Multimap) obj, field, cs, path, depth);
+		} else if(Table.class.isAssignableFrom(clazz)&&isTable(obj)) {
+			return getTable((Table) obj, field, cs, path, depth);
 		} else if(Map.class.isAssignableFrom(clazz)&&isMap(obj)) {
 			return getMap((Map) obj, field, cs, path, depth);
 		} else if(clazz.isEnum()&&isEnum(clazz, obj)) {
@@ -111,7 +132,6 @@ public abstract class ConfigObject {
 	/*
 	 * class detection
 	 */
-	
 	@SuppressWarnings("rawtypes")
 	protected Class getClassAtDepth(Type type, int depth) throws Exception {
 		if(depth<=0) {
@@ -167,6 +187,24 @@ public abstract class ConfigObject {
 	}
 	
 	@SuppressWarnings("rawtypes")
+	protected boolean isMultimap(Object obj) {
+		try {
+			return (Multimap) obj != null;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	protected boolean isTable(Object obj) {
+		try {
+			return (Table) obj != null;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
 	protected boolean isMap(Object obj) {
 		try {
 			return (Map) obj != null;
@@ -206,6 +244,47 @@ public abstract class ConfigObject {
 		return obj;
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected Multimap getMultimap(Field field, ConfigurationSection cs, String path, int depth) throws Exception {
+		depth++;
+		Set<String> keys = cs.getKeys(false);
+		Multimap multimap = ArrayListMultimap.create();
+		if(keys != null && keys.size() > 0) {
+			for(String key : keys) {
+				Object in = cs.get(key);
+				in = loadObject(field, cs, key, depth);
+				if (in instanceof List) {
+					multimap.putAll(key, (List) in);
+				} else {
+					throw new InvalidConfigurationException(cs.getCurrentPath()+"."+key + " is not a List.");
+				}
+			}
+		}
+		return multimap;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected Table getTable(Field field, ConfigurationSection cs, String path, int depth) throws Exception {
+		depth++;
+		Set<String> keys = cs.getKeys(false);
+		Table table = HashBasedTable.create();
+		if(keys != null && keys.size() > 0) {
+			for(String key : keys) {
+				Object in = cs.get(key);
+				in = loadObject(field, cs, key, depth);
+				if (in instanceof Map) {
+					Map<String, Object> map = (Map) in;
+					for (Map.Entry entry : map.entrySet()) {
+						table.put(key, entry.getKey(), entry.getValue());
+					}
+				} else {
+					throw new InvalidConfigurationException(cs.getCurrentPath()+"."+key + " is not a Map.");
+				}
+			}
+		}
+		return table;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected Map getMap(Field field, ConfigurationSection cs, String path, int depth) throws Exception {
 		depth++;
@@ -266,6 +345,36 @@ public abstract class ConfigObject {
 	protected ConfigurationSection getConfigObject(ConfigObject obj, String path, ConfigurationSection cs) throws Exception {
 		ConfigurationSection subCS = cs.createSection(path);
 		obj.onSave(subCS);
+		return subCS;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected ConfigurationSection getMultimap(Multimap map, Field field, ConfigurationSection cs, String path, int depth) throws Exception {
+		depth++;
+		ConfigurationSection subCS = cs.createSection(path);
+		Set<String> keys = map.keySet();
+		if(keys != null && keys.size() > 0) {
+			for(String key : keys) {
+				Object out = map.get(key);
+				out = saveObject(out, field, cs, path+"."+key, depth);
+				subCS.set(key, out);
+			}
+		}
+		return subCS;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected ConfigurationSection getTable(Table table, Field field, ConfigurationSection cs, String path, int depth) throws Exception {
+		depth++;
+		ConfigurationSection subCS = cs.createSection(path);
+		Set<Table.Cell> keys = table.cellSet();
+		if(keys != null && keys.size() > 0) {
+			for(Table.Cell key : keys) {
+				Object out = table.get(key.getRowKey(),key.getColumnKey());
+				out = saveObject(out, field, cs, path+"."+key.getRowKey()+"."+key.getColumnKey(), depth);
+				subCS.set(key.getRowKey()+"."+key.getColumnKey(), out);
+			}
+		}
 		return subCS;
 	}
 

@@ -9,18 +9,23 @@ import net.craftminecraft.bungee.bungeeyaml.bukkitapi.InvalidConfigurationExcept
 import net.craftminecraft.bungee.bungeeyaml.bukkitapi.file.YamlConfiguration;
 
 /*
- * SuperEasyConfig - Config
+ * Bungee's SuperEasyConfig - Config
  * 
- * Based off of codename_Bs EasyConfig v2.1
+ * Based off of MrFigg's SuperEasyConfig v1.2
+ * which was inspired by codename_Bs
  * which was inspired by md_5
+ * which was inspired by... oh no, that's it.
  * 
- * An even awesomer super-duper-lazy Config lib!
+ * Super Lazy Configuration for BungeeCord.
+ * Includes support for Guava Library's collection types.
  * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * 
  * @author MrFigg
+ * @author roblabla
+ * 
  * @version 1.2
  */
 
