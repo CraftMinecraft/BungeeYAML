@@ -63,10 +63,16 @@ public abstract class ConfigObject {
 	protected void onSave(ConfigurationSection cs) throws Exception {
 		for(Field field : getClass().getDeclaredFields()) {
 			String path = field.getName().replaceAll("_", ".");
+	        if (field.getAnnotation(Path.class) != null) {
+	            path = field.getAnnotation(Path.class).value();
+	        }
 			if(doSkip(field)) {
 				// Do nothing
 			} else {
 				cs.set(path, saveObject(field.get(this), field, cs, path));
+	            if (field.getAnnotation(Comment.class).value() != null) {
+	                cs.setComment(path, field.getAnnotation(Comment.class).value());          
+	            }
 			}
 		}
 	}
