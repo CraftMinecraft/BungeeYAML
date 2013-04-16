@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import com.google.common.base.Preconditions;
 
@@ -35,14 +39,62 @@ public class YamlConfiguration extends FileConfiguration {
         yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         yamlRepresenter.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 
-        String header = buildHeader();
-        String dump = yaml.dump(getValues(false));
+        StringBuilder builder = new StringBuilder(buildHeader());
+        if (builder.length() > 0) {
+            builder.append('\n'); // newline after header, if present.
+        }
+        
+        builder.append(saveConfigSectionWithComments(this, false));
+        
+        String dump = builder.toString();
 
         if (dump.equals(BLANK_CONFIG)) {
             dump = "";
         }
 
-        return header + dump;
+        return dump;
+    }
+
+    public String saveConfigSectionWithComments(ConfigurationSection section, boolean depth) {
+        StringBuilder builder = new StringBuilder();
+        for (Iterator<Map.Entry<String, Object>> i = section.getValues(false).entrySet().iterator(); i.hasNext();) {
+            Map.Entry<String, Object> entry = i.next();
+
+            // Output comment, if present
+            String comment = this.getComment(entry.getKey());
+            if (comment != null) {
+                builder.append(buildComment(comment));
+            }
+            
+            if (entry.getValue() instanceof ConfigurationSection) {
+                // output new line before ConfigurationSection. Pretier.
+                builder.append('\n');
+                // If it's a section, get it's string representation and append it to our builder.
+                   builder.append(entry.getKey() + ":" + yamlOptions.getLineBreak().getString());
+                builder.append(saveConfigSectionWithComments((ConfigurationSection) entry.getValue(), true));
+                // output new line after ConfigurationSection. Prettier.
+                builder.append('\n');
+            } else {
+                // If it's not a configuration section, just let yaml do it's stuff.
+                builder.append(yaml.dump(Collections.singletonMap(entry.getKey(), entry.getValue())));
+            }    
+        }
+        String dump = builder.toString();
+        
+        // Prepend the indentation if we aren't the root configuration.
+        if (depth) {
+            String[] lines = dump.split(Pattern.quote(yamlOptions.getLineBreak().getString()));
+            StringBuilder indented = new StringBuilder();
+            for (int i = 0;i<lines.length;i++) {
+                for (int indent = 0;indent<yamlOptions.getIndent();indent++) {
+                    indented.append(" ");
+                }
+                indented.append(lines[i] + yamlOptions.getLineBreak().getString());
+            }
+            return indented.toString();
+        } else {
+            return dump;
+        }
     }
 
     @Override
@@ -208,5 +260,21 @@ public class YamlConfiguration extends FileConfiguration {
         }
 
         return config;
+    }
+    
+    /**
+     * Format a multi-line property comment.
+     * 
+     * @param comment the original comment string
+     * @return the formatted comment string
+     */
+    protected String buildComment(String comment) {
+        StringBuilder builder = new StringBuilder();
+        for (String line : comment.split("\r?\n")) {
+            builder.append(COMMENT_PREFIX);
+            builder.append(line);
+            builder.append('\n');
+        }
+        return builder.toString();
     }
 }

@@ -603,4 +603,35 @@ public interface ConfigurationSection {
      * @throws IllegalArgumentException Thrown if path is null.
      */
     public void addDefault(String path, Object value);
+    
+    /**
+     * Returns a root-level comment.
+     * 
+     * @param key the property key
+     * @return the comment or <code>null</code>
+     */
+    public String getComment(String key);
+
+    /**
+     * Set a root-level comment.
+     * 
+     * @param key the property key
+     * @param comment the comment. May be <code>null</code>, in which case the comment
+     *   is removed.
+     */
+    public void setComment(String key, String... comment);
+
+    /**
+     * Returns root-level comments.
+     * 
+     * @return map of root-level comments
+     */
+    public Map<String, String> getComments(boolean deep);
+
+    /**
+     * Set root-level comments from a map.
+     * 
+     * @param comments comment map
+     */
+    public void setComments(Map<String, String> comments);
 }

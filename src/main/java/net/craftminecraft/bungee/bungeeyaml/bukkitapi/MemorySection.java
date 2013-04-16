@@ -3,12 +3,15 @@ package net.craftminecraft.bungee.bungeeyaml.bukkitapi;
 import static net.craftminecraft.bungee.bungeeyaml.bukkitapi.NumberConversions.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 
 /**
@@ -20,7 +23,9 @@ public class MemorySection implements ConfigurationSection {
     private final ConfigurationSection parent;
     private final String path;
     private final String fullPath;
-
+    // Map from property key to comment. Comment may have multiple lines that are newline-separated.
+    private final Map<String, String> comments = new HashMap<String, String>();
+    
     /**
      * Creates an empty MemorySection for use as a root {@link Configuration} section.
      * <p />
@@ -743,5 +748,108 @@ public class MemorySection implements ConfigurationSection {
             .append(root == null ? null : root.getClass().getSimpleName())
             .append("']")
             .toString();
+    }
+
+    /**
+     * Returns a property comment.
+     * 
+     * @param path the path to the property
+     * @return the comment or <code>null</code>
+     */
+    public String getComment(String path) {
+        Preconditions.checkNotNull(path, "Path cannot be null");
+
+        Configuration root = getRoot();
+        if (root == null) {
+            throw new IllegalStateException("Cannot access section without a root");
+        }
+
+        // Return the comment associated to this element.
+        if (path.length() == 0) {
+            return this.getParent() == null ? null : this.getParent().getComment(this.getName());
+        }
+
+
+        final char separator = root.options().pathSeparator();
+        // i1 is the leading (higher) index
+        // i2 is the trailing (lower) index
+        int i1 = -1, i2;
+        ConfigurationSection section = this;
+        while ((i1 = path.indexOf(separator, i2 = i1 + 1)) != -1) {
+            section = section.getConfigurationSection(path.substring(i2, i1));
+            if (section == null) {
+                return null;
+            }
+        }
+
+        String key = path.substring(i2);
+        if (section == this) {
+            return comments.get(key);
+        }
+        return section.getComment(key);
+    }
+
+    /**
+     * Set a propertie's comment.
+     * 
+     * @param path the property
+     * @param comment the comment. May be <code>null</code>, in which case the comment
+     *   is removed.
+     */
+    public void setComment(String path, String... comment) {
+		Preconditions.checkArgument(!path.isEmpty(), "Cannot set to an empty path");
+
+        Configuration root = getRoot();
+        if (root == null) {
+            throw new IllegalStateException("Cannot use section without a root");
+        }
+
+        final char separator = root.options().pathSeparator();
+        // i1 is the leading (higher) index
+        // i2 is the trailing (lower) index
+        int i1 = -1, i2;
+        ConfigurationSection section = this;
+        while ((i1 = path.indexOf(separator, i2 = i1 + 1)) != -1) {
+            String node = path.substring(i2, i1);
+            ConfigurationSection subSection = section.getConfigurationSection(node);
+            if (subSection == null) {
+                section = section.createSection(node);
+            } else {
+                section = subSection;
+            }
+        }
+
+        String key = path.substring(i2);
+        if (section == this) {
+            if (comment != null && comment.length > 0) {
+                String s = Joiner.on('\n').join(comment);
+                comments.put(key, s);
+            } else {
+                comments.remove(key);
+            }
+        } else {
+            section.setComment(key, comment);
+        }
+    }
+
+    /**
+     * Returns comments for these root-level elements.
+     * 
+     * @param deep Doesn't do anything as of yet.
+     * @return map of root-level comments
+     */
+    public Map<String, String> getComments(boolean deep) {
+        return Collections.unmodifiableMap(comments);
+    }
+
+    /**
+     * Set root-level comments from a map.
+     * 
+     * @param comments comment map
+     */
+    public void setComments(Map<String, String> comments) {
+        this.comments.clear();
+        if (comments != null)
+            this.comments.putAll(comments);
     }
 }
