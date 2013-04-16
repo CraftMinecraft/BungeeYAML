@@ -1,5 +1,10 @@
 package net.craftminecraft.bungee.bungeeyaml.supereasyconfig;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /*
  * Bungee's SuperEasyConfig - ItemPath
  * 
@@ -20,7 +25,8 @@ package net.craftminecraft.bungee.bungeeyaml.supereasyconfig;
  * 
  * @version 1.2
  */
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 public @interface Path {
 	String value();
 }
