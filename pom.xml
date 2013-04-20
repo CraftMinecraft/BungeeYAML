@@ -6,7 +6,7 @@
   <name>BungeeYAML</name>
   <description>YAML Configuration for BungeeCord</description>
   <properties>
-    <build.number>localbuild</build.number>
+    <build.number>1</build.number>
   </properties>
   <distributionManagement>
     <repository>
@@ -30,12 +30,10 @@
     <repository>
       <id>sonatype-oss-public</id>
       <url>https://oss.sonatype.org/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
+    </repository>
+    <repository>
+      <id>The Buzz Media Maven Repository</id>
+      <url>http://maven.thebuzzmedia.com</url>
     </repository>
   </repositories>
   
@@ -47,13 +45,66 @@
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.thebuzzmedia</groupId>
+      <artifactId>sjxp</artifactId>
+      <version>2.2</version>
+    </dependency>
   </dependencies>
   <build>
+    <finalName>BungeeYAML</finalName>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
       </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <minimizeJar>false</minimizeJar>
+              <artifactSet>
+                <includes>
+	              <include>com.thebuzzmedia:sjxp</include>
+	              <include>*:xpp3</include>
+	            </includes>
+              </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>*:xpp3</artifact>
+                  <excludes>
+                    <!-- Make the jar as small as possible. sjxp only requires the XmlPullParserFactory and the mxparser classes. -->
+                    <exclude>org/xmlpull/v1/builder/**</exclude>
+                    <exclude>org/xmlpull/v1/dom2_builder/**</exclude>
+					<exclude>org/xmlpull/v1/parser_pool/**</exclude>
+                    <exclude>org/xmlpull/v1/sax2/**</exclude>
+                    <exclude>org/xmlpull/v1/util/**</exclude>
+                    <exclude>org/xmlpull/v1/wrapper/**</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 </project>

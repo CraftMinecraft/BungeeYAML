@@ -1,0 +1,7 @@
+# Put 'autoupdate: false' to turn of automatic downloading of updates.
+autoupdate: true
+
+# The channel to use when updating.
+# Can either be rel or release (for release builds)
+# or dev or development (for dev builds)
+updatechannel: release
