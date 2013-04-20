@@ -85,7 +85,12 @@ public class ConfigurablePlugin extends Plugin {
     }
     
     @Override
-    public void onLoad() {
+    public final void onLoad() {
     	this.configFile = new File(this.getDataFolder(), "config.yml");
+        this.onLoading();
+    }
+
+    public void onLoading() {
+
     }
 }
