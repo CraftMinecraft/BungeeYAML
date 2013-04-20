@@ -70,14 +70,19 @@ public class YamlConfiguration extends FileConfiguration {
                 // output new line before ConfigurationSection. Pretier.
                 builder.append('\n');
                 // If it's a section, get it's string representation and append it to our builder.
-                   builder.append(entry.getKey() + ":" + yamlOptions.getLineBreak().getString());
+                // If the first character isn't alphanumeric, quote it !
+                if (Character.isLetterOrDigit(entry.getKey().codePointAt(0)))
+                   builder.append(entry.getKey());
+                else
+                    builder.append("'" + entry.getKey() + "'");
+                builder.append(":" + yamlOptions.getLineBreak().getString());
                 builder.append(saveConfigSectionWithComments((ConfigurationSection) entry.getValue(), true));
                 // output new line after ConfigurationSection. Prettier.
                 builder.append('\n');
             } else {
                 // If it's not a configuration section, just let yaml do it's stuff.
                 builder.append(yaml.dump(Collections.singletonMap(entry.getKey(), entry.getValue())));
-            }    
+            }
         }
         String dump = builder.toString();
         
