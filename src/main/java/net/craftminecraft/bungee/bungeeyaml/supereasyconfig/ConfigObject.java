@@ -70,7 +70,7 @@ public abstract class ConfigObject {
 				// Do nothing
 			} else {
 				cs.set(path, saveObject(field.get(this), field, cs, path));
-	            if (field.getAnnotation(Comment.class).value() != null) {
+	            if (field.getAnnotation(Comment.class) != null) {
 	                cs.setComment(path, field.getAnnotation(Comment.class).value());          
 	            }
 			}
