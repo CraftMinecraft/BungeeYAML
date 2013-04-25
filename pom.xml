@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.craftminecraft.bungee</groupId>
   <artifactId>bungeeyaml</artifactId>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>1.2.1</version>
   <name>BungeeYAML</name>
   <description>YAML Configuration for BungeeCord</description>
   <properties>
