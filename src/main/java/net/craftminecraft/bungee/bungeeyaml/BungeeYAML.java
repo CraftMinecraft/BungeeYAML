@@ -106,7 +106,12 @@ public class BungeeYAML extends ConfigurablePlugin {
     
     private void update(String url) throws Exception {
         Response resp = this.getProxy().getHttpClient().prepareGet(url).execute().get();
-        File bungeeyamlfile = new File(this.getProxy().getPluginsFolder(), "BungeeYAML.jar"); // Should add a this.getFile();
+        File bungeeyamlfile;
+        try {
+            bungeeyamlfile = this.getFile();
+        } catch (NoSuchMethodError ex) { // If we are running on a slightly older version of BungeeCord.
+            bungeeyamlfile = new File(this.getProxy().getPluginsFolder(), "BungeeYAML.jar"); // Should add a this.getFile();
+        }
         FileOutputStream bungeeyamlstream = new FileOutputStream(bungeeyamlfile);
         bungeeyamlstream.write(resp.getResponseBodyAsBytes());
         bungeeyamlstream.close();
