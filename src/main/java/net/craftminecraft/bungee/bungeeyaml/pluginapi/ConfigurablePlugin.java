@@ -22,7 +22,7 @@ public class ConfigurablePlugin extends Plugin {
         return newConfig;
     }
 
-	private void reloadConfig() {
+	public void reloadConfig() {
         newConfig = YamlConfiguration.loadConfiguration(configFile);
 
         InputStream defConfigStream = this.getResourceAsStream("config.yml");
