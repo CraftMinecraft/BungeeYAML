@@ -16,13 +16,13 @@ public class ConfigurablePlugin extends Plugin {
     private File configFile = null;
 
     public FileConfiguration getConfig() {
-		if (newConfig == null) {
+        if (newConfig == null) {
             reloadConfig();
         }
         return newConfig;
     }
 
-	public void reloadConfig() {
+    public void reloadConfig() {
         newConfig = YamlConfiguration.loadConfiguration(configFile);
 
         InputStream defConfigStream = this.getResourceAsStream("config.yml");
@@ -31,8 +31,8 @@ public class ConfigurablePlugin extends Plugin {
 
             newConfig.setDefaults(defConfig);
         }
-	}
-	
+    }
+    
     public void saveConfig() {
         try {
             getConfig().save(configFile);
@@ -86,7 +86,7 @@ public class ConfigurablePlugin extends Plugin {
     
     @Override
     public final void onLoad() {
-    	this.configFile = new File(this.getDataFolder(), "config.yml");
+        this.configFile = new File(this.getDataFolder(), "config.yml");
         this.onLoading();
     }
 
