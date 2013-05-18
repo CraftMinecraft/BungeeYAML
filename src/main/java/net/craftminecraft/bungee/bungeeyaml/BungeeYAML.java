@@ -82,7 +82,8 @@ public class BungeeYAML extends ConfigurablePlugin {
             XMLParser<BungeeYAML> parser = new XMLParser<BungeeYAML>(versionrule);
             parser.parse(resp.getResponseBodyAsStream(), this);
         } catch (NumberFormatException ex) {this.getProxy().getLogger().log(Level.INFO, "[BungeeYAML] Using custom version of BungeeYAML. Will not autoupdate.");return;
-        } catch (Exception ex) {this.getProxy().getLogger().log(Level.WARNING, "[BungeeYAML] Update of BungeeYAML failed.",ex);return;}
+        } catch (Exception ex) {this.getProxy().getLogger().log(Level.WARNING, "[BungeeYAML] Update of BungeeYAML failed.",ex);return;
+        } catch (ExceptionInInitializerError err) {this.getProxy().getLogger().log(Level.WARNING, "[BungeeYAML] Update of BungeeYAML failed.",err);return;}
     }
 
     @SuppressWarnings("unchecked")
